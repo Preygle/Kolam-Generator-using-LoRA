@@ -1,8 +1,8 @@
-# 🎨 Kolam AI Generator
+# Kolam AI Generator
 
 A beautiful web interface for generating intricate Kolam patterns using AI. This application combines the power of Stable Diffusion with a modern, responsive React frontend to create stunning traditional South Indian art.
 
-## ✨ Features
+## Features
 
 - **Beautiful Modern UI**: Clean, responsive design with glassmorphism effects
 - **AI-Powered Generation**: Uses Stable Diffusion to create detailed Kolam patterns
@@ -13,198 +13,132 @@ A beautiful web interface for generating intricate Kolam patterns using AI. This
 - **Download Support**: Save your generated Kolams as PNG files
 - **Responsive Design**: Works perfectly on desktop, tablet, and mobile
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
-1. **Stable Diffusion WebUI** with API enabled
-2. **Python 3.8+**
-3. **Node.js 16+** and npm
+1. **Python 3.10+** (Required for Stable Diffusion WebUI)
+2. **Node.js 16+** and npm (Required for Frontend)
+3. **Git**
 
-### Installation
+### Installation & Setup
 
-1. **Clone or download this project**
+**IMPORTANT**: This repository does **NOT** contain the Stable Diffusion WebUI. You must clone it separately and configure it as described below.
 
-2. **Install Python dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+#### 1. Setup Stable Diffusion WebUI (DirectML)
 
-3. **Install React dependencies:**
-   ```bash
-   cd sd-frontend
-   npm install
-   ```
+1.  **Clone the WebUI Repository**:
+    Open a terminal in a *separate* folder (or same parent folder) and run:
+    ```bash
+    git clone https://github.com/lshqqytiger/stable-diffusion-webui-directml.git
+    cd stable-diffusion-webui-directml
+    ```
 
-4. **Start Stable Diffusion WebUI with API:**
-   ```bash
-   python launch.py --api --listen
-   ```
+2.  **Download the Base Model**:
+    - Download **Stable Diffusion v1.5** (`v1-5-pruned-emaonly.safetensors`).
+    - [Download Link (HuggingFace)](https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors)
+    - **PASTE HERE**: `stable-diffusion-webui-directml/models/Stable-diffusion/`
+
+3.  **Install the Kolam LoRA**:
+    - This `kolam-image-gen` repository contains the custom trained LoRA model file: `kolam_lora_final.pth`.
+    - **Step A**: Locate `kolam_lora_final.pth` in the root of *this* project.
+    - **Step B**: **COPY** it.
+    - **Step C**: **PASTE** it into the WebUI folder: `stable-diffusion-webui-directml/models/Lora/`
+
+4.  **Run the WebUI**:
+    - Open a terminal in the `stable-diffusion-webui-directml` folder.
+    - Run the following command (YOU MUST INCLUDE --api):
+      ```bash
+      ./webui-user.bat --api --listen
+      ```
+    - Wait until it says "Running on local URL: http://127.0.0.1:7860".
+
+#### 2. Setup Kolam Image Gen (This App)
+
+1.  **Install Python Backend Dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+2.  **Install Frontend Dependencies**:
+    ```bash
+    cd sd-frontend
+    npm install
+    cd ..
+    ```
 
 ### Running the Application
 
-#### Option 1: Using the startup script (Recommended)
+Once the Stable Diffusion WebUI is **running** on port 7860:
+
+#### Option 1: One-Click Start (Recommended)
+Run the startup script from the root of this repo:
 ```bash
 python start_server.py
 ```
 
-#### Option 2: Manual setup
+#### Option 2: Manual Start
 
-1. **Start the backend server:**
-   ```bash
-   python -m uvicorn app:app --host 0.0.0.0 --port 8000 --reload
-   ```
+1.  **Start Backend** (New Terminal in `kolam-image-gen`):
+    ```bash
+    python -m uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+    ```
 
-2. **Start the React frontend (in a new terminal):**
-   ```bash
-   cd sd-frontend
-   npm start
-   ```
+2.  **Start Frontend** (New Terminal in `kolam-image-gen/sd-frontend`):
+    ```bash
+    cd sd-frontend
+    npm start
+    ```
 
-3. **Open your browser:**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8000
-   - API Documentation: http://localhost:8000/docs
+3.  **Access the App**:
+    - Open http://localhost:3000 in your browser.
 
-## 🎯 How to Use
+## Dataset
+
+The training data for this model is available publicly.
+**Dataset Name**: **[Traditional Kolam Geometric Patterns Dataset](https://www.kaggle.com/datasets/preygle/traditional-kolam-geometric-patterns-dataset)**
+
+## How to Use
 
 1. **Enter your prompt**: Add additional details to the base Kolam prompt (optional)
 2. **Use presets**: Click on quick preset buttons for common styles
 3. **Adjust settings**: Expand "Advanced Settings" to customize generation parameters
 4. **Generate**: Click "Generate Kolam" to create your artwork
 5. **Download**: Hover over generated images and click the download button
-6. **View history**: Scroll down to see your recent generations
 
-## 🛠️ Configuration
+## Configuration
 
-### Backend Configuration
+### Backend (`app.py`)
+- **API Endpoint**: Connects to `http://127.0.0.1:7860/sdapi/v1/txt2img`
+- **Port**: Runs on `8000`
 
-The FastAPI backend (`app.py`) connects to your local Stable Diffusion WebUI. Key settings:
-
-- **Base Prompt**: Always included: "a highly detailed SKS kolam, intricate symmetrical pattern, masterpiece, sharp focus"
-- **Default Parameters**: 50 steps, 512x512 resolution, CFG scale 7.0, Euler sampler
-- **Image Storage**: Generated images are saved in the `output/` directory
-
-### Frontend Configuration
-
-The React frontend (`sd-frontend/src/App.js`) provides the user interface:
-
+### Frontend (`sd-frontend/src/App.js`)
 - **API Endpoint**: Connects to `http://localhost:8000/generate`
-- **Responsive Design**: Adapts to different screen sizes
-- **Image History**: Keeps last 10 generated images in memory
+- **Port**: Runs on `3000`
 
-## 📁 Project Structure
+## Project Structure
 
-```
+```text
 kolam-image-gen/
-├── app.py                 # FastAPI backend server
-├── start_server.py        # Startup script
-├── requirements.txt       # Python dependencies
-├── output/               # Generated images storage
-├── sd-frontend/          # React frontend
-│   ├── src/
-│   │   ├── App.js        # Main React component
-│   │   ├── App.css       # Styling
-│   │   └── index.css     # Global styles
-│   ├── package.json      # Node.js dependencies
-│   └── public/           # Static assets
-└── README.md             # This file
+├── app.py                      # Main FastAPI backend server that handles image generation requests
+├── start_server.py             # Utility script to launch both backend and provide frontend instructions
+├── test_sd_api.py              # Diagnostic script to verify connectivity with Stable Diffusion WebUI
+├── kolam_lora_final.pth        # Custom trained LoRA model for Kolam patterns
+├── requirements.txt            # Python dependencies
+├── sd-frontend/                # React frontend application directory
+├── auto_crop_borders.py        # Preprocessing: Removes whitespace borders from images
+├── preprocess_dataset.py       # Preprocessing: Resizes and cleans dataset images
+├── invert_image_colors.py      # Preprocessing: Inverts image colors (black/white conversion)
+├── validate_dataset.py         # Utility: Checks dataset image dimensions and formats
+├── extract_individual_kolams.py # Processing: Segments multiple Kolams from a single sheet
+├── pinterest_scraper.py        # Data Collection: Scrapes Kolam images for training data
+├── sanitize_filenames.py       # Utility: Standardizes filenames in the dataset
+├── dcgan.py                    # Experimental: DCGAN implementation for pattern generation
+├── lora_train.py               # Training: Script used for LoRA model training
+├── output/                     # Directory where generated images are saved
+└── README.md                   # Project documentation
 ```
 
-## 🎨 Customization
-
-### Adding New Preset Prompts
-
-Edit the `presetPrompts` array in `sd-frontend/src/App.js`:
-
-```javascript
-const presetPrompts = [
-  "traditional South Indian design",
-  "geometric mandala pattern",
-  "floral border design",
-  "peacock feather inspired",
-  "lotus flower pattern",
-  "temple architecture inspired",
-  "your custom prompt here"
-];
-```
-
-### Modifying the Base Prompt
-
-Update the `base_prompt` variable in `app.py`:
-
-```python
-base_prompt = "your custom base prompt here"
-```
-
-### Changing Default Settings
-
-Modify the default settings in `sd-frontend/src/App.js`:
-
-```javascript
-const [settings, setSettings] = useState({
-  steps: 50,           // Number of sampling steps
-  width: 512,          // Image width
-  height: 512,         // Image height
-  cfg_scale: 7.0,      // CFG scale
-  sampler_index: "Euler" // Sampler method
-});
-```
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-1. **"Stable Diffusion WebUI is not running"**
-   - Make sure you started WebUI with `--api` flag
-   - Check that WebUI is running on `http://127.0.0.1:7860`
-
-2. **"Failed to generate image"**
-   - Check your Stable Diffusion model is loaded
-   - Verify WebUI API is accessible
-   - Check console for detailed error messages
-
-3. **Frontend not connecting to backend**
-   - Ensure backend is running on port 8000
-   - Check CORS settings in `app.py`
-   - Verify no firewall blocking the connection
-
-4. **Images not saving**
-   - Check `output/` directory exists and is writable
-   - Verify sufficient disk space
-
-### Performance Tips
-
-- **Reduce steps** for faster generation (20-30 steps often sufficient)
-- **Lower resolution** (256x256) for quicker results
-- **Use efficient samplers** like Euler or DPM++ 2M
-- **Close other applications** to free up GPU memory
-
-## 📝 API Documentation
-
-The FastAPI backend provides several endpoints:
-
-- `POST /generate` - Generate a new Kolam image
-- `GET /images/{filename}` - Retrieve a saved image
-- `GET /health` - Health check endpoint
-
-Visit `http://localhost:8000/docs` for interactive API documentation.
-
-## 🤝 Contributing
-
-Feel free to submit issues, feature requests, or pull requests to improve this project!
-
-## 📄 License
+## License
 
 This project is open source and available under the MIT License.
-
-## 🙏 Acknowledgments
-
-- **Stable Diffusion** for the AI image generation capabilities
-- **FastAPI** for the robust backend framework
-- **React** for the modern frontend framework
-- **Traditional Kolam artists** for the beautiful art form that inspired this project
-
----
-
-**Happy Kolam Creating! 🎨✨**
