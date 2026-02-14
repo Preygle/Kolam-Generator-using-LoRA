@@ -5,8 +5,7 @@ A beautiful web interface for generating intricate Kolam patterns using AI. This
 
 ## Demo Video
 
-https://github.com/user-attachments/assets/45f25480-881f-487a-ab9e-d969d452ed11
-
+![Demo Video](assets/demo.gif)
 
 
 ## Features
