@@ -3,7 +3,7 @@
 A beautiful web interface for generating intricate Kolam patterns using AI. This application combines the power of Stable Diffusion with a modern, responsive React frontend to create stunning traditional South Indian art.
 
 <div align="center">
-  <video src="assets/videos/demo.mp4" width="100%" controls></video>
+  <video src="assets/demo.mp4" width="100%" controls></video>
 </div>
 
 ## Features
@@ -20,8 +20,8 @@ A beautiful web interface for generating intricate Kolam patterns using AI. This
 ## Gallery
 | | |
 |:-------------------------:|:-------------------------:|
-| ![Kolam Pattern 1](assets/images/1.png) | ![Kolam Pattern 2](assets/images/2.png) |
-| ![Kolam Pattern 3](assets/images/3.png) | ![Kolam Pattern 4](assets/images/4.png) |
+| ![Kolam Pattern 1](assets/1.png) | ![Kolam Pattern 2](assets/2.png) |
+| ![Kolam Pattern 3](assets/3.png) | ![Kolam Pattern 4](assets/4.png) |
 ## Quick Start
 
 ### Prerequisites
